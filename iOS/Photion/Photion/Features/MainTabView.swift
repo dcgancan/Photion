@@ -41,6 +41,16 @@ struct MainTabView: View {
             }
             .tag(2)
             
+            // Network Test (Development)
+            NavigationStack {
+                NetworkTestView()
+            }
+            .tabItem {
+                Image(systemName: "network")
+                Text("Network")
+            }
+            .tag(3)
+            
             // Profil
             NavigationStack {
                 ProfileView()
@@ -49,7 +59,7 @@ struct MainTabView: View {
                 Image(systemName: "person.circle.fill")
                 Text("Profil")
             }
-            .tag(3)
+            .tag(4)
         }
         .accentColor(.blue)
     }

@@ -9,22 +9,27 @@ import Foundation
 
 /// User model for authentication and user management
 struct User: Codable, Identifiable {
-    let id: UUID
+    let id: Int
     let email: String
-    let firstName: String
-    let lastName: String
+    let name: String?
     let createdAt: Date
     let updatedAt: Date
     
     // MARK: - Computed Properties
-    var fullName: String {
-        return "\(firstName) \(lastName)"
+    var displayName: String {
+        return name ?? email.components(separatedBy: "@").first ?? "User"
     }
     
     var initials: String {
-        let firstInitial = firstName.first?.uppercased() ?? ""
-        let lastInitial = lastName.first?.uppercased() ?? ""
-        return "\(firstInitial)\(lastInitial)"
+        let components = displayName.components(separatedBy: " ")
+        if components.count >= 2 {
+            let firstInitial = components[0].first?.uppercased() ?? ""
+            let lastInitial = components[1].first?.uppercased() ?? ""
+            return "\(firstInitial)\(lastInitial)"
+        } else {
+            let firstTwo = String(displayName.prefix(2)).uppercased()
+            return firstTwo
+        }
     }
 }
 
@@ -37,8 +42,7 @@ struct LoginRequest: Codable {
 struct RegisterRequest: Codable {
     let email: String
     let password: String
-    let firstName: String
-    let lastName: String
+    let name: String?
 }
 
 struct AuthResponse: Codable {

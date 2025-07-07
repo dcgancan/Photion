@@ -16,10 +16,11 @@ router.get('/test', async (req, res) => {
     });
   } catch (error) {
     console.error('Database connection test failed:', error);
-    res.status(500).json({
+    res.json({
       success: false,
-      message: 'Database connection failed',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Database not available (development mode)',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -36,10 +37,12 @@ router.get('/users/count', async (req, res) => {
     });
   } catch (error) {
     console.error('User count query failed:', error);
-    res.status(500).json({
+    res.json({
       success: false,
-      message: 'Failed to get user count',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Database not available (development mode)',
+      userCount: 0,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     });
   }
 });

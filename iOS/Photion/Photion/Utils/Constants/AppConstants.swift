@@ -12,7 +12,7 @@ struct AppConstants {
     
     // MARK: - API Configuration
     struct API {
-        static let baseURL = "https://api.photion.com"
+        static let baseURL = "http://localhost:3000" // Development server
         static let version = "v1"
         static let timeout: TimeInterval = 30.0
         
