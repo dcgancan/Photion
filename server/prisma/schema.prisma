@@ -13,10 +13,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User management
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String?
+  password  String   // Hashed password
+  phone     String?
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relations
+  videos    Video[]
+  orders    Order[]
+  
+  @@map("users")
+}
+
+// Video and frame management  
+model Video {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  originalName   String
+  fileSize       Int
+  duration       Float    // in seconds
+  resolution     String   // e.g., "1920x1080"
+  format         String   // e.g., "mp4"
+  s3Key          String   // S3 storage key
+  s3Url          String   // S3 public URL
+  processedS3Key String?  // Optimized video S3 key
+  processedS3Url String?  // Optimized video S3 URL
+  status         VideoStatus @default(UPLOADING)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  frames         Frame[]
+  
+  @@map("videos")
+}
+
+model Frame {
+  id          Int      @id @default(autoincrement())
+  videoId     Int
+  timestamp   Float    // Frame timestamp in seconds
+  s3Key       String   // High-res frame S3 key
+  s3Url       String   // High-res frame S3 URL  
+  arMarkerId  String   @unique // Unique AR marker ID
+  isSelected  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  orders      Order[]
+  
+  @@map("frames")
+}
+
+// Order and payment management
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  frameId         Int
+  orderNumber     String      @unique // Human-readable order number
+  
+  // Customer info
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  
+  // Shipping info
+  shippingAddress Json        // Flexible address structure
+  
+  // Order details
+  printSize       String      // e.g., "10x15", "13x18"
+  printQuantity   Int         @default(1)
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  currency        String      @default("TRY")
+  
+  // Payment info
+  paymentMethod   String      // e.g., "paytr", "iyzico"
+  paymentId       String?     // Payment provider transaction ID
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Order status
+  status          OrderStatus @default(PENDING)
+  notes           String?     // Internal notes
+  
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  
+  // Relations
+  user            User        @relation(fields: [userId], references: [id])
+  frame           Frame       @relation(fields: [frameId], references: [id])
+  
+  @@map("orders")
+}
+
+// Enums
+enum VideoStatus {
+  UPLOADING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  PRINTED
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

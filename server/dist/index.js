@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const health_1 = __importDefault(require("./routes/health"));
 const database_1 = __importDefault(require("./routes/database"));
+const auth_1 = __importDefault(require("./routes/auth"));
 const errorHandler_1 = require("./middlewares/errorHandler");
 const prisma_1 = require("./lib/prisma");
 const app = (0, express_1.default)();
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api', health_1.default);
 app.use('/api/db', database_1.default);
+app.use('/api/auth', auth_1.default);
 app.use(errorHandler_1.notFoundHandler);
 app.use(errorHandler_1.globalErrorHandler);
 async function connectToDatabase() {

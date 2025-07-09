@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose up:*)",
+      "Bash(open:*)",
+      "Bash(cp:*)",
+      "Bash(npm run:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker-compose:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(DEBUG=*)",
+      "Bash(ls:*)",
+      "Bash(docker run:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(brew install:*)",
+      "Bash(brew services start:*)",
+      "Bash(createdb:*)",
+      "Bash(npm install:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(curl:*)"
+    ],
+    "deny": []
+  }
+}

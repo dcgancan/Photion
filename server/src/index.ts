@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import healthRouter from './routes/health';
 import databaseRouter from './routes/database';
+import authRouter from './routes/auth';
 import { notFoundHandler, globalErrorHandler } from './middlewares/errorHandler';
 import { prisma } from './lib/prisma';
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api', healthRouter);
 app.use('/api/db', databaseRouter);
+app.use('/api/auth', authRouter);
 
 // Error handling middleware
 app.use(notFoundHandler);
